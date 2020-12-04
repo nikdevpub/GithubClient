@@ -116,14 +116,7 @@ class RepositoryListFragment : BaseFragment(), RepositoryListView {
     }
 
     override fun showProgress(isEnabled: Boolean) {
-        if (isEnabled) {
-            repositories_list_recycler.visibility = View.GONE
-            repositories_list_progress.visibility = View.VISIBLE
-        } else {
-            repositories_list_recycler.visibility = View.VISIBLE
-            repositories_list_progress.visibility = View.GONE
-            repositories_list_swipe.isRefreshing = false
-        }
+        repositories_list_swipe.isRefreshing = isEnabled
     }
 
     override fun showRepositories(repositoryItems: List<RepositoryItem>?) {
