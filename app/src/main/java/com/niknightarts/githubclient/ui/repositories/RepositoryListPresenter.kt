@@ -24,29 +24,31 @@ class RepositoryListPresenter @Inject constructor(
         }
 
         addDisposable(
-                Single.zip(
-                        repository.getRepositories(text, "stars", "desc", 15, 1),
-                        repository.getRepositories(text, "stars", "desc", 15, 2),
-                        BiFunction { t1, t2 ->
-                            var results = arrayListOf<RepositoryItem>()
-                            results.addAll(t1.repositoryItems)
-                            results.addAll(t2.repositoryItems)
-                            return@BiFunction results
-                        })
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe {
-                            viewState.showProgress(true)
-                        }
-                        .doAfterTerminate {
-                            viewState.showProgress(false)
-                        }
-                        .subscribe({ repositories ->
-                            viewState.showRepositories(repositories)
-                        }, { e ->
-                            Timber.d(e)
-                            viewState.showMessage(e.message ?: "Error")
-                        })
+            Single.zip(
+                repository.getRepositories(text, "stars", "desc", 15, 1)
+                    .subscribeOn(Schedulers.newThread()),
+                repository.getRepositories(text, "stars", "desc", 15, 2)
+                    .subscribeOn(Schedulers.newThread()),
+                BiFunction { t1, t2 ->
+                    var results = arrayListOf<RepositoryItem>()
+                    results.addAll(t1.repositoryItems)
+                    results.addAll(t2.repositoryItems)
+                    return@BiFunction results
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    viewState.showProgress(true)
+                }
+                .doAfterTerminate {
+                    viewState.showProgress(false)
+                }
+                .subscribe({ repositories ->
+                    viewState.showRepositories(repositories)
+                }, { e ->
+                    Timber.d(e)
+                    viewState.showMessage(e.message ?: "Error")
+                })
         )
     }
 
