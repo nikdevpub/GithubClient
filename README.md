@@ -1,7 +1,6 @@
 # GithubClient
 
-Приложение для поиска репозиториев на GitHub
+GitHub repository finder.
 
-Требования:
-Приложение должно выводить список из 30 названий репозиториев отсортированных по рейтингу звезд (по убыванию).
-Поиск должен выполняться в 2-х параллельных потоках по 15 репозиториев на каждый
+The application must find a list of 30 repositories, sorted by rating (in descending order).
+The search should be performed in 2 parallel threads of 15 repositories each
